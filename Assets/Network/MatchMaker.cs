@@ -126,11 +126,14 @@ public class MatchMaker : NetworkBehaviour
                 // found matching match
                 int playerIndex = matches[i].Players.IndexOf(player.gameObject);
                 matches[i].Players.RemoveAt(playerIndex);
+                player.GetComponent<PlayerNetworking>().inGame = false;
                 ServerLog.Log(ServerLog.LogType.Warn, $"{player} - Disconnected from match {matchId}. Terminating Game");
                 // TODO: Handle win logic for player whom didn't disconnect
                 foreach (var playerRemaining in matches[i].Players)
                 {
-                    playerRemaining.GetComponent<PlayerNetworking>().TerminateMatch();
+                    var networkPlayer = playerRemaining.GetComponent<PlayerNetworking>();
+                    ServerLog.Log(ServerLog.LogType.Warn, $"{networkPlayer} - Disconnected from match {matchId}. InGame: {networkPlayer.inGame}");
+                    networkPlayer.TerminateMatch();
                 }
                 matches.RemoveAt(i);
                 matchIds.Remove(matchId);
@@ -157,7 +160,7 @@ public class MatchMaker : NetworkBehaviour
                 {
                     PlayerNetworking playerNetwork = player.GetComponent<PlayerNetworking>();
                     // add this player to this specific match manager
-                    ServerLog.Log(ServerLog.LogType.Debug, $"Added {playerNetwork.name} to match {playerNetwork.MatchId}");
+                    ServerLog.Log(ServerLog.LogType.Debug, $"Added {playerNetwork.name} to match {playerNetwork.MatchId}.");
                     manager.AddPlayer(playerNetwork);
                     // tell each player to start the match
                     playerNetwork.StartMatch();

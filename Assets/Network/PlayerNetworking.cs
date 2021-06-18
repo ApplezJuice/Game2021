@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Mirror;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayerNetworking : NetworkBehaviour
@@ -10,6 +8,9 @@ public class PlayerNetworking : NetworkBehaviour
     [SyncVar] public string MatchId;
     [SyncVar] public string Name;
     NetworkMatchChecker networkMatchChecker;
+
+    [SyncVar] public bool inGame;
+    [SyncVar] public int gold;
 
     GameObject enemyPlayerNameUI;
 
@@ -179,9 +180,21 @@ public class PlayerNetworking : NetworkBehaviour
     void TargetBeginMatch()
     {
         ServerLog.Log(ServerLog.LogType.Debug, $"{MatchId} match beginning!");
-        Debug.Log("Match starting on TargetRpc!");
         // load match scene
         SceneManager.LoadScene(2, LoadSceneMode.Additive);
+        CmdPlayerInGame();
+    }
+
+    [Command]
+    void CmdPlayerInGame()
+    {
+        inGame = true;
+        TargetLoadMatchUI();
+    }
+
+    [TargetRpc]
+    void TargetLoadMatchUI()
+    {
         UIHandler.instance.LoadMatchUI();
     }
 
@@ -202,11 +215,19 @@ public class PlayerNetworking : NetworkBehaviour
     void TargetTerminateMatch()
     {
         UIHandler.instance.MatchTerminated();
+        CmdNotInGame();
+    }
+
+    [Command]
+    void CmdNotInGame()
+    {
+        inGame = false;
     }
 
     [Command]
     void CmdDisconnectMatch()
     {
+        inGame = false;
         ServerDisconnect();
     }
 
@@ -227,5 +248,24 @@ public class PlayerNetworking : NetworkBehaviour
     {
         if (enemyPlayerNameUI)
             Destroy(enemyPlayerNameUI);
+    }
+
+    public void AddGold()
+    {
+        CmdAddPlayerGold();
+    }
+
+    [Command]
+    void CmdAddPlayerGold()
+    {
+        gold += 10;
+        ServerLog.Log(ServerLog.LogType.Warn, $"Added gold. Total: {gold}");
+        TargetUpdateGold(gold.ToString());
+    }
+
+    [TargetRpc]
+    void TargetUpdateGold(string gold)
+    {
+        UIHandler.instance.UpdateGoldUI($"Gold: {gold}");
     }
 }
