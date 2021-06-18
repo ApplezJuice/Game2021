@@ -33,6 +33,8 @@ public class MatchMaker : NetworkBehaviour
     public SyncListMatch matches = new SyncListMatch();
     public SyncList<string> matchIds = new SyncList<string>();
 
+    [SerializeField] GameObject matchManagerPrefab;
+
     private void Start()
     {
         instance = this;
@@ -44,12 +46,34 @@ public class MatchMaker : NetworkBehaviour
         {
             matchIds.Add(matchId);
             matches.Add(new Match(matchId, player));
-            Debug.Log($"<color=green>Match Generated!</color>");
+            ServerLog.Log(ServerLog.LogType.Debug, $"Match Generated!");
             return true;
         }
 
-        Debug.Log($"<color=red>Match ID Already Exists!</color>");
+        ServerLog.Log(ServerLog.LogType.Error, $"Match ID Already Exists!");
         return false;
+    }
+
+    public Tuple<bool,string> JoinMatch(GameObject player)
+    {
+        // TODO: end up doing matchmaking stuffs here
+        if (matchIds.Count > 0)
+        {
+            for (int i = 0; i < matches.Count; i++)
+            {
+                if (matches[i].Players.Count == 1)
+                {
+                    // found match
+                    matches[i].Players.Add(player);
+                    ServerLog.Log(ServerLog.LogType.Info, $"Match Joined! {matches[i].MatchId}");
+                    return Tuple.Create(true, matches[i].MatchId);
+                }
+            }
+        }
+
+        // Could not find an open match, host one
+        ServerLog.Log(ServerLog.LogType.Debug, $"No open matches!");
+        return Tuple.Create(false, "none");
     }
 
     public static string GetRandomMatchId()
@@ -69,8 +93,37 @@ public class MatchMaker : NetworkBehaviour
                 id += (random - 26).ToString();
             }
         }
+        ServerLog.Log(ServerLog.LogType.Debug, $"Random match ID: {id}");
         Debug.Log($"Random match ID: {id}");
         return id;
+    }
+
+    public void BeginMatch(string matchId)
+    {
+        GameObject matchManager = Instantiate(matchManagerPrefab);
+        // spawn on all clients
+        NetworkServer.Spawn(matchManager);
+        // this match manager will only apply to the players that have this matchid
+        matchManager.GetComponent<NetworkMatchChecker>().matchId = matchId.ToGuid();
+        MatchManager manager = matchManager.GetComponent<MatchManager>();
+
+        for (int i = 0; i < matches.Count; i++)
+        {
+            if (matches[i].MatchId == matchId)
+            {
+                // this is the match we need
+                foreach (var player in matches[i].Players)
+                {
+                    PlayerNetworking playerNetwork = player.GetComponent<PlayerNetworking>();
+                    // add this player to this specific match manager
+                    ServerLog.Log(ServerLog.LogType.Debug, $"Added {playerNetwork.name} to match {playerNetwork.MatchId}");
+                    manager.AddPlayer(playerNetwork);
+                    // tell each player to start the match
+                    playerNetwork.StartMatch();
+                }
+                break;
+            }
+        }
     }
 }
 

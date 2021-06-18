@@ -4,7 +4,13 @@ public class NetworkManagerCustom : NetworkManager
 {
     public override void Start()
     {
-        //StartServer();
+#if UNITY_SERVER
+            if (autoStartServerBuild)
+            {
+                StartServer();
+            }
+#else
         this.StartClient();
+#endif
     }
 }

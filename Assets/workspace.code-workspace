@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+    ],
+    "settings": {
+        "files.exclude": {
+            "**/.git": true,
+            "**/.svn": true,
+            "**/.hg": true,
+            "**/CVS": true,
+            "**/.DS_Store": true,
+            "TextMesh Pro": true,
+            "Scenes": true,
+            "Editor": true,
+            "**.meta": true,
+            "ScriptTemplates": true,
+        }
+    }
+}
