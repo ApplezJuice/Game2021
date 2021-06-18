@@ -11,10 +11,16 @@ public class PlayerNetworking : NetworkBehaviour
     [SyncVar] public string Name;
     NetworkMatchChecker networkMatchChecker;
 
-    void Start()
+    GameObject enemyPlayerNameUI;
+
+    void Awake()
     {
         networkMatchChecker = GetComponent<NetworkMatchChecker>();
+    }
 
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
         if (isLocalPlayer)
         {
             localPlayer = this;
@@ -22,9 +28,21 @@ public class PlayerNetworking : NetworkBehaviour
         else
         {
             // not local player stuff will happen here. (Spawn in other player avatar in UI etc.)
-            UIHandler.instance.SpawnPlayerName(this);
+            enemyPlayerNameUI = UIHandler.instance.SpawnPlayerName(this);
         }
+    }
 
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        ClientDisconnect();
+        
+    }
+
+    public override void OnStopServer()
+    {
+        base.OnStopServer();
+        ServerDisconnect();
     }
 
     public void SetName(string name)
@@ -44,6 +62,38 @@ public class PlayerNetworking : NetworkBehaviour
 
         // Need to put in logic to search for a match
         CmdJoinMatch();
+    }
+
+    public void CancelSearch()
+    {
+        CmdCancelSearch();
+    }
+
+    [Command]
+    void CmdCancelSearch()
+    {
+        if (!string.IsNullOrEmpty(MatchId))
+        {
+            // is host, remove match lobby
+            if (MatchMaker.instance.CancelLobby(MatchId))
+            {
+                // removed lobby
+                ServerLog.Log(ServerLog.LogType.Warn, $"Canceled match search!");
+                MatchId = string.Empty;
+                networkMatchChecker.matchId = string.Empty.ToGuid();
+                TargetReturnToLobby();
+            }
+            else
+            {
+                ServerLog.Log(ServerLog.LogType.Error, $"Could not cancel search..");
+            }
+        }
+    }
+
+    [TargetRpc]
+    void TargetReturnToLobby()
+    {
+        UIHandler.instance.ReturnToLobby();
     }
 
     // command, so running on the server version of player
@@ -133,5 +183,49 @@ public class PlayerNetworking : NetworkBehaviour
         // load match scene
         SceneManager.LoadScene(2, LoadSceneMode.Additive);
         UIHandler.instance.LoadMatchUI();
+    }
+
+    /* 
+     * DISCONNECT 
+     */
+    public void DisconnectMatch()
+    {
+        CmdDisconnectMatch();
+    }
+
+    public void TerminateMatch()
+    {
+        TargetTerminateMatch();
+    }
+
+    [TargetRpc]
+    void TargetTerminateMatch()
+    {
+        UIHandler.instance.MatchTerminated();
+    }
+
+    [Command]
+    void CmdDisconnectMatch()
+    {
+        ServerDisconnect();
+    }
+
+    void ServerDisconnect()
+    {
+        MatchMaker.instance.DisconnectPlayer(this, MatchId);
+        networkMatchChecker.matchId = string.Empty.ToGuid();
+        RpcDisconnectMatch();
+    }
+
+    [ClientRpc]
+    void RpcDisconnectMatch()
+    {
+        ClientDisconnect();
+    }
+
+    void ClientDisconnect()
+    {
+        if (enemyPlayerNameUI)
+            Destroy(enemyPlayerNameUI);
     }
 }

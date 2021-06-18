@@ -10,6 +10,7 @@ using System.Text;
 public class Match
 {
     public string MatchId;
+    public bool Joinable = true;
     public SyncListGameObject Players = new SyncListGameObject();
     public Match(string matchId, GameObject player)
     {
@@ -96,6 +97,46 @@ public class MatchMaker : NetworkBehaviour
         ServerLog.Log(ServerLog.LogType.Debug, $"Random match ID: {id}");
         Debug.Log($"Random match ID: {id}");
         return id;
+    }
+
+    public bool CancelLobby(string matchId)
+    {
+        for (int i = 0; i < matches.Count; i++)
+        {
+            if (matches[i].MatchId == matchId)
+            {
+                // TODO: delete the matchmanager
+
+                // remove the match
+                matchIds.Remove(matchId);
+                matches.RemoveAt(i);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void DisconnectPlayer(PlayerNetworking player, string matchId)
+    {
+        for (int i = 0; i < matches.Count; i++)
+        {
+            if (matches[i].MatchId == matchId)
+            {
+                // found matching match
+                int playerIndex = matches[i].Players.IndexOf(player.gameObject);
+                matches[i].Players.RemoveAt(playerIndex);
+                ServerLog.Log(ServerLog.LogType.Warn, $"{player} - Disconnected from match {matchId}. Terminating Game");
+                // TODO: Handle win logic for player whom didn't disconnect
+                foreach (var playerRemaining in matches[i].Players)
+                {
+                    playerRemaining.GetComponent<PlayerNetworking>().TerminateMatch();
+                }
+                matches.RemoveAt(i);
+                matchIds.Remove(matchId);
+                break;
+            }
+        }
     }
 
     public void BeginMatch(string matchId)

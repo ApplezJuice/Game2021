@@ -17,11 +17,16 @@ public class UIHandler : MonoBehaviour
     [SerializeField] GameObject nameFieldParent;
     [SerializeField] TextMeshProUGUI playerName;
 
+    /** SEARCHING UI**/
+    [SerializeField] GameObject SearchingUIPanel;
+
     /** MATCH UI **/
     [Header("Match UI")]
     [SerializeField] GameObject matchUIPanel;
     [SerializeField] Transform playerNameContainer;
     [SerializeField] GameObject playerNamePrefab;
+
+    GameObject playerNameUI;
 
     void Start()
     {
@@ -30,8 +35,23 @@ public class UIHandler : MonoBehaviour
 
     public void SearchForMatch()
     {
-        searchButton.interactable = false;
+        lobbyUIPanel.SetActive(false);
+        SearchingUIPanel.SetActive(true);
         PlayerNetworking.localPlayer.SearchForMatch();
+    }
+
+    public void CancelSearch()
+    {
+        if (playerNameUI)
+            Destroy(playerNameUI);
+
+        PlayerNetworking.localPlayer.CancelSearch();
+    }
+
+    public void ReturnToLobby()
+    {
+        SearchingUIPanel.SetActive(false);
+        lobbyUIPanel.SetActive(true);
     }
 
     public void SetPlayerName()
@@ -48,12 +68,9 @@ public class UIHandler : MonoBehaviour
     {
         if(success)
         {
-            searchButton.interactable = false;
-            SpawnPlayerName(PlayerNetworking.localPlayer);
-        }
-        else
-        {
-            searchButton.interactable = true;
+            if (playerNameUI)
+                Destroy(playerNameUI);
+            playerNameUI = SpawnPlayerName(PlayerNetworking.localPlayer);
         }
     }
 
@@ -61,24 +78,45 @@ public class UIHandler : MonoBehaviour
     {
         if (success)
         {
-            searchButton.interactable = false;
-            SpawnPlayerName(PlayerNetworking.localPlayer);
-        }
-        else
-        {
-            searchButton.interactable = true;
+            if (playerNameUI)
+                Destroy(playerNameUI);
+            playerNameUI = SpawnPlayerName(PlayerNetworking.localPlayer);
         }
     }
 
-    public void SpawnPlayerName(PlayerNetworking player)
+    public GameObject SpawnPlayerName(PlayerNetworking player)
     {
         GameObject newNameUI = Instantiate(playerNamePrefab, playerNameContainer);
         newNameUI.GetComponent<TextMeshProUGUI>().text = player.Name;
+        return newNameUI;
     }
 
     public void LoadMatchUI()
     {
         lobbyUIPanel.SetActive(false);
+        SearchingUIPanel.SetActive(false);
         matchUIPanel.SetActive(true);
+    }
+
+    public void DisconnectFromMatch()
+    {
+        if (playerNameUI)
+            Destroy(playerNameUI);
+
+        PlayerNetworking.localPlayer.DisconnectMatch();
+
+        lobbyUIPanel.SetActive(true);
+        SearchingUIPanel.SetActive(false);
+        matchUIPanel.SetActive(false);
+    }
+
+    public void MatchTerminated()
+    {
+        if (playerNameUI)
+            Destroy(playerNameUI);
+
+        lobbyUIPanel.SetActive(true);
+        SearchingUIPanel.SetActive(false);
+        matchUIPanel.SetActive(false);
     }
 }
