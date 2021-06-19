@@ -34,6 +34,11 @@ public class UIHandler : MonoBehaviour
         instance = this;
     }
 
+    public void CloseApplication()
+    {
+        Application.Quit();
+    }
+
     public void SearchForMatch()
     {
         lobbyUIPanel.SetActive(false);
