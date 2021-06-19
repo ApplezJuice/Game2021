@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2297781454040170948}
   - component: {fileID: 1910424722648660986}
   m_Layer: 0
-  m_Name: Player
+  m_Name: player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -147,3 +147,6 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   MatchId: 
+  Name: 
+  gold: 100
+  playerSpec: {fileID: 11400000, guid: ad50946d5211abb4b90293723015cf10, type: 2}

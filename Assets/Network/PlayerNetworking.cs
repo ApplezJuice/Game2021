@@ -9,7 +9,8 @@ public class PlayerNetworking : NetworkBehaviour
     [SyncVar] public string Name;
     NetworkMatchChecker networkMatchChecker;
 
-    [SyncVar] public int gold;
+    [SyncVar] public int gold = 100;
+    [SyncVar][SerializeField] public PlayerSpec playerSpec;
 
     GameObject enemyPlayerNameUI;
 
@@ -169,12 +170,24 @@ public class PlayerNetworking : NetworkBehaviour
         MatchMaker.instance.BeginMatch(MatchId);
     }
 
+    [Command]
+    void CmdResetMatch()
+    {
+        gold = playerSpec.gold;
+        TargetResetMatch();
+    }
+
+    [TargetRpc]
+    void TargetResetMatch()
+    {
+        UIHandler.instance.UpdateGoldUI(playerSpec.gold.ToString());
+    }
+
     public void StartMatch()
     {
         TargetBeginMatch();
     }
 
-    // To all clients
     [TargetRpc]
     void TargetBeginMatch()
     {
@@ -182,6 +195,7 @@ public class PlayerNetworking : NetworkBehaviour
         // load match scene
         SceneManager.LoadScene(2, LoadSceneMode.Additive);
         UIHandler.instance.LoadMatchUI();
+        CmdResetMatch();
     }
 
     /* 
@@ -246,14 +260,13 @@ public class PlayerNetworking : NetworkBehaviour
     [Command]
     void CmdAddPlayerGold()
     {
-        gold += 10;
-        ServerLog.Log(ServerLog.LogType.Warn, $"Added gold. Total: {gold}");
+        gold += playerSpec.goldIncrement;
         TargetUpdateGold(gold.ToString());
     }
 
     [TargetRpc]
     void TargetUpdateGold(string gold)
     {
-        UIHandler.instance.UpdateGoldUI($"Gold: {gold}");
+        UIHandler.instance.UpdateGoldUI($"{gold}");
     }
 }

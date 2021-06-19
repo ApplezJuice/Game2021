@@ -64,6 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  matchManagerSpec: {fileID: 11400000, guid: cb424b809b0febf4aaf64ecaa43d9c7c, type: 2}
 --- !u!114 &6669317586140519351
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -123,6 +123,6 @@ public class UIHandler : MonoBehaviour
 
     public void UpdateGoldUI(string goldText)
     {
-        playerGold.text = goldText;
+        playerGold.text = ($"Gold: {goldText}");
     }
 }

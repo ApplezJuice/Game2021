@@ -6,6 +6,7 @@ using Mirror;
 public class MatchManager : NetworkBehaviour
 {
     List<PlayerNetworking> players = new List<PlayerNetworking>();
+    public MatchManagerSpec matchManagerSpec;
     bool matchInProgress = false;
     float goldtimer;
 
@@ -27,11 +28,10 @@ public class MatchManager : NetworkBehaviour
                 /*
                 * RESOURCES
                 */
-            if (goldtimer >= 5f)
+            if (goldtimer >= matchManagerSpec.goldRefreshTimer)
             {
                 foreach(var player in players)
                 {
-                    ServerLog.Log(ServerLog.LogType.Warn, $"Player: {player}");
                     player.AddGold();
                     goldtimer = 0f;
                 }
