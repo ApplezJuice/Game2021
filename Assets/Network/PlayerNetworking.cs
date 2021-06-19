@@ -229,6 +229,7 @@ public class PlayerNetworking : NetworkBehaviour
     void TargetTerminateMatch()
     {
         UIHandler.instance.MatchTerminated();
+        SceneManager.UnloadSceneAsync("Match");
     }
 
     [ClientRpc]
