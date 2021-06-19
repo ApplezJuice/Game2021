@@ -16,6 +16,7 @@ public class UIHandler : MonoBehaviour
     [SerializeField] TextMeshProUGUI nameField;
     [SerializeField] GameObject nameFieldParent;
     [SerializeField] TextMeshProUGUI playerName;
+    [SerializeField] TextMeshProUGUI playerRank;
 
     /** SEARCHING UI**/
     [SerializeField] GameObject SearchingUIPanel;
