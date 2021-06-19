@@ -9,7 +9,6 @@ public class PlayerNetworking : NetworkBehaviour
     [SyncVar] public string Name;
     NetworkMatchChecker networkMatchChecker;
 
-    [SyncVar] public bool inGame;
     [SyncVar] public int gold;
 
     GameObject enemyPlayerNameUI;
@@ -182,19 +181,6 @@ public class PlayerNetworking : NetworkBehaviour
         ServerLog.Log(ServerLog.LogType.Debug, $"{MatchId} match beginning!");
         // load match scene
         SceneManager.LoadScene(2, LoadSceneMode.Additive);
-        CmdPlayerInGame();
-    }
-
-    [Command]
-    void CmdPlayerInGame()
-    {
-        inGame = true;
-        TargetLoadMatchUI();
-    }
-
-    [TargetRpc]
-    void TargetLoadMatchUI()
-    {
         UIHandler.instance.LoadMatchUI();
     }
 
@@ -206,29 +192,16 @@ public class PlayerNetworking : NetworkBehaviour
         CmdDisconnectMatch();
     }
 
-    public void TerminateMatch()
-    {
-        TargetTerminateMatch();
-    }
-
-    [TargetRpc]
-    void TargetTerminateMatch()
-    {
-        UIHandler.instance.MatchTerminated();
-        CmdNotInGame();
-    }
-
-    [Command]
-    void CmdNotInGame()
-    {
-        inGame = false;
-    }
-
     [Command]
     void CmdDisconnectMatch()
     {
-        inGame = false;
         ServerDisconnect();
+        TargetTerminateMatch();
+    }
+
+    public void TerminateMatch()
+    {
+        TargetTerminateMatch();
     }
 
     void ServerDisconnect()
@@ -236,6 +209,12 @@ public class PlayerNetworking : NetworkBehaviour
         MatchMaker.instance.DisconnectPlayer(this, MatchId);
         networkMatchChecker.matchId = string.Empty.ToGuid();
         RpcDisconnectMatch();
+    }
+
+    [TargetRpc]
+    void TargetTerminateMatch()
+    {
+        UIHandler.instance.MatchTerminated();
     }
 
     [ClientRpc]
@@ -248,9 +227,18 @@ public class PlayerNetworking : NetworkBehaviour
     {
         if (enemyPlayerNameUI)
             Destroy(enemyPlayerNameUI);
+        
+        //MatchMaker.instance.DisconnectPlayer(this, MatchId);
     }
 
     public void AddGold()
+    {
+        //Debug.Log("Gold Called on This Specific Client!");
+        TargetAddPlayerGold();
+    }
+
+    [TargetRpc]
+    void TargetAddPlayerGold()
     {
         CmdAddPlayerGold();
     }

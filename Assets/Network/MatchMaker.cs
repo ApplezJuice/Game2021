@@ -34,6 +34,8 @@ public class MatchMaker : NetworkBehaviour
     public SyncListMatch matches = new SyncListMatch();
     public SyncList<string> matchIds = new SyncList<string>();
 
+    public SyncDictionary<string, MatchManager> matchManagers = new SyncDictionary<string, MatchManager>();
+
     [SerializeField] GameObject matchManagerPrefab;
 
     private void Start()
@@ -126,17 +128,26 @@ public class MatchMaker : NetworkBehaviour
                 // found matching match
                 int playerIndex = matches[i].Players.IndexOf(player.gameObject);
                 matches[i].Players.RemoveAt(playerIndex);
-                player.GetComponent<PlayerNetworking>().inGame = false;
                 ServerLog.Log(ServerLog.LogType.Warn, $"{player} - Disconnected from match {matchId}. Terminating Game");
                 // TODO: Handle win logic for player whom didn't disconnect
                 foreach (var playerRemaining in matches[i].Players)
                 {
                     var networkPlayer = playerRemaining.GetComponent<PlayerNetworking>();
-                    ServerLog.Log(ServerLog.LogType.Warn, $"{networkPlayer} - Disconnected from match {matchId}. InGame: {networkPlayer.inGame}");
+                    ServerLog.Log(ServerLog.LogType.Warn, $"{networkPlayer} - Disconnected from match {matchId}.");
                     networkPlayer.TerminateMatch();
                 }
                 matches.RemoveAt(i);
                 matchIds.Remove(matchId);
+
+                if (matchManagers.Count > 0)
+                {
+                    if (matchManagers.TryGetValue(matchId, out MatchManager matchManager))
+                    {
+                        NetworkServer.Destroy(matchManager.gameObject);
+                        matchManagers.Remove(matchId);
+                    }
+                }
+
                 break;
             }
         }
@@ -155,6 +166,11 @@ public class MatchMaker : NetworkBehaviour
         {
             if (matches[i].MatchId == matchId)
             {
+                if(!matchManagers.ContainsKey(matchId))
+                {
+                    matchManagers.Add(matchId, manager);
+                    ServerLog.Log(ServerLog.LogType.Debug, $"Added Match Manager to MatchID: {matchId}");
+                }
                 // this is the match we need
                 foreach (var player in matches[i].Players)
                 {

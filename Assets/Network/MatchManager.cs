@@ -6,9 +6,46 @@ using Mirror;
 public class MatchManager : NetworkBehaviour
 {
     List<PlayerNetworking> players = new List<PlayerNetworking>();
+    bool matchInProgress = false;
+    float goldtimer;
+
+    void Start()
+    {
+        matchInProgress = true;
+    }
+
+    void Update()
+    {
+        float t = Time.time;
+        float dt = Time.deltaTime;
+
+        if (matchInProgress)
+        {
+            // do match things
+
+            goldtimer += dt;
+                /*
+                * RESOURCES
+                */
+            if (goldtimer >= 5f)
+            {
+                foreach(var player in players)
+                {
+                    ServerLog.Log(ServerLog.LogType.Warn, $"Player: {player}");
+                    player.AddGold();
+                    goldtimer = 0f;
+                }
+            }
+        }
+    }
 
     public void AddPlayer(PlayerNetworking player)
     {
         players.Add(player);
+    }
+
+    public void MatchEnded()
+    {
+        matchInProgress = false;
     }
 }

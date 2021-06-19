@@ -97,7 +97,6 @@ public class UIHandler : MonoBehaviour
         lobbyUIPanel.SetActive(false);
         SearchingUIPanel.SetActive(false);
         matchUIPanel.SetActive(true);
-        StartCoroutine(UpdateGoldResource());
     }
 
     public void DisconnectFromMatch()
@@ -110,7 +109,6 @@ public class UIHandler : MonoBehaviour
         lobbyUIPanel.SetActive(true);
         SearchingUIPanel.SetActive(false);
         matchUIPanel.SetActive(false);
-        StopAllCoroutines();
     }
 
     public void MatchTerminated()
@@ -121,19 +119,6 @@ public class UIHandler : MonoBehaviour
         lobbyUIPanel.SetActive(true);
         SearchingUIPanel.SetActive(false);
         matchUIPanel.SetActive(false);
-        StopAllCoroutines();
-    }
-
-    IEnumerator UpdateGoldResource()
-    {
-        Debug.Log($"Coroutine! {PlayerNetworking.localPlayer.inGame}");
-        WaitForSeconds updateEveryFewSeconds = new WaitForSeconds(5);
-        do
-        {
-            yield return updateEveryFewSeconds;
-            PlayerNetworking.localPlayer.AddGold();
-
-        } while (PlayerNetworking.localPlayer.inGame);
     }
 
     public void UpdateGoldUI(string goldText)
