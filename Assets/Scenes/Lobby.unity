@@ -1222,13 +1222,14 @@ GameObject:
   - component: {fileID: 364636505}
   - component: {fileID: 364636504}
   - component: {fileID: 364636503}
+  - component: {fileID: 364636506}
   m_Layer: 5
   m_Name: FindMatch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &364636502
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1343,6 +1344,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 364636501}
   m_CullTransparentMesh: 1
+--- !u!225 &364636506
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364636501}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &381452980
 GameObject:
   m_ObjectHideFlags: 0
@@ -1376,8 +1389,8 @@ RectTransform:
   - {fileID: 880078369}
   - {fileID: 1561318332}
   - {fileID: 198097757}
-  m_Father: {fileID: 1616329869}
-  m_RootOrder: 4
+  m_Father: {fileID: 1924029586}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -1465,7 +1478,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 440350849}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1924859910}
+        m_TargetAssemblyTypeName: UIHandler, Assembly-CSharp
+        m_MethodName: ClanButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &440350849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1780,7 +1805,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 665979524}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1924859910}
+        m_TargetAssemblyTypeName: UIHandler, Assembly-CSharp
+        m_MethodName: LoadoutButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &665979524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3576,14 +3613,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1071717348}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 297424258}
   - {fileID: 1174285417}
-  m_Father: {fileID: 1616329869}
-  m_RootOrder: 5
+  m_Father: {fileID: 1924029586}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5623,8 +5660,7 @@ RectTransform:
   - {fileID: 364636502}
   - {fileID: 1786918649}
   - {fileID: 1850265536}
-  - {fileID: 381452981}
-  - {fileID: 1071717349}
+  - {fileID: 1924029586}
   m_Father: {fileID: 733989491}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6129,6 +6165,7 @@ GameObject:
   - component: {fileID: 1786918648}
   - component: {fileID: 1786918647}
   - component: {fileID: 1786918646}
+  - component: {fileID: 1786918650}
   m_Layer: 5
   m_Name: SetName
   m_TagString: Untagged
@@ -6250,6 +6287,18 @@ RectTransform:
   m_AnchoredPosition: {x: 132, y: -297}
   m_SizeDelta: {x: 125, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1786918650
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786918645}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1850265535
 GameObject:
   m_ObjectHideFlags: 0
@@ -6262,6 +6311,7 @@ GameObject:
   - component: {fileID: 1850265539}
   - component: {fileID: 1850265538}
   - component: {fileID: 1850265537}
+  - component: {fileID: 1850265540}
   m_Layer: 5
   m_Name: NameField
   m_TagString: Untagged
@@ -6425,6 +6475,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1850265535}
   m_CullTransparentMesh: 1
+--- !u!225 &1850265540
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850265535}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1881422746
 GameObject:
   m_ObjectHideFlags: 0
@@ -6581,7 +6643,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1882813050}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1924859910}
+        m_TargetAssemblyTypeName: UIHandler, Assembly-CSharp
+        m_MethodName: FriendsButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1882813050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6755,6 +6829,43 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1901322116}
   m_CullTransparentMesh: 1
+--- !u!1 &1924029585
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1924029586}
+  m_Layer: 5
+  m_Name: LoadoutUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1924029586
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1924029585}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 381452981}
+  - {fileID: 1071717349}
+  m_Father: {fileID: 1616329869}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1924859905
 GameObject:
   m_ObjectHideFlags: 0
@@ -6878,6 +6989,7 @@ MonoBehaviour:
   nameFieldParent: {fileID: 1850265535}
   playerName: {fileID: 1773726710}
   playerRank: {fileID: 1230340702}
+  animator: {fileID: 1616329870}
   SearchingUIPanel: {fileID: 1045743300}
   matchUIPanel: {fileID: 1716898675}
   playerNameContainer: {fileID: 2022516335}
@@ -7352,7 +7464,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2071749596}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1924859910}
+        m_TargetAssemblyTypeName: UIHandler, Assembly-CSharp
+        m_MethodName: NewsButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2071749596
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,9 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+public enum UIState
+{
+    Loadout = 0,
+    Friends = 1,
+    Clan = 2,
+    News = 3
+}
+
 public class UIHandler : MonoBehaviour
 {
     public static UIHandler instance;
+
+    UIState uiState {get; set;}
 
     /** MAIN LOBBY UI **/
     [Header("Lobby UI")]
@@ -17,6 +27,7 @@ public class UIHandler : MonoBehaviour
     [SerializeField] GameObject nameFieldParent;
     [SerializeField] TextMeshProUGUI playerName;
     [SerializeField] TextMeshProUGUI playerRank;
+    [SerializeField] Animator animator;
 
     /** SEARCHING UI**/
     [SerializeField] GameObject SearchingUIPanel;
@@ -28,11 +39,70 @@ public class UIHandler : MonoBehaviour
     [SerializeField] GameObject playerNamePrefab;
     [SerializeField] TextMeshProUGUI playerGold;
 
+
     GameObject playerNameUI;
 
     void Start()
     {
         instance = this;
+    }
+
+    void SetUIState(UIState state)
+    {
+        if (uiState == state) { return; }
+
+        var previousState = uiState;
+        previousState = state;
+
+        switch(state)
+        {
+            case UIState.Loadout:
+                // slide to the right
+            break;
+            case UIState.Friends:
+                if (previousState == UIState.Clan || previousState == UIState.News)
+                {
+                    // slide to the right
+                }
+                else
+                {
+                    // slide to the left
+                }
+            break;
+            case UIState.Clan:
+                if (previousState == UIState.Friends || previousState == UIState.Loadout)
+                {
+                    // slide to the left
+                }
+                else
+                {
+                    // slide to the right
+                }
+            break;
+            case UIState.News:
+                // slide to the left
+            break;
+        }
+    }
+
+    public void LoadoutButton()
+    {
+        SetUIState(UIState.Loadout);
+    }
+
+    public void FriendsButton()
+    {
+        SetUIState(UIState.Friends);
+    }
+
+    public void ClanButton()
+    {
+        SetUIState(UIState.Clan);
+    }
+
+    public void NewsButton()
+    {
+        SetUIState(UIState.News);
     }
 
     public void CloseApplication()
@@ -67,8 +137,9 @@ public class UIHandler : MonoBehaviour
         playerName.text = nameField.text;
         setName.enabled = false;
         nameField.enabled = false;
-        setName.gameObject.SetActive(false);
-        nameFieldParent.gameObject.SetActive(false);
+        // setName.gameObject.SetActive(false);
+        // nameFieldParent.gameObject.SetActive(false);
+        animator.SetBool("NameSet", true);
     }
 
     public void HostSuccess(bool success)
