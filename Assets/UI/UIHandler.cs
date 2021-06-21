@@ -137,8 +137,8 @@ public class UIHandler : MonoBehaviour
         playerName.text = nameField.text;
         setName.enabled = false;
         nameField.enabled = false;
-        // setName.gameObject.SetActive(false);
-        // nameFieldParent.gameObject.SetActive(false);
+        //setName.gameObject.SetActive(false);
+        //nameFieldParent.gameObject.SetActive(false);
         animator.SetBool("NameSet", true);
     }
 
