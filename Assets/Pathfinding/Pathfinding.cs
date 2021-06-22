@@ -4,21 +4,9 @@ using System.Collections.Generic;
 
 public class Pathfinding : MonoBehaviour
 {
+	[SerializeField] public Grid grid;
 
-	public Transform seeker, target;
-	Grid grid;
-
-	void Awake()
-	{
-		grid = GetComponent<Grid>();
-	}
-
-	void Update()
-	{
-		FindPath(seeker.position, target.position);
-	}
-
-	void FindPath(Vector3 startPos, Vector3 targetPos)
+	public List<Node> FindPath(Vector3 startPos, Vector3 targetPos)
 	{
 		Node startNode = grid.NodeFromWorldPoint(startPos);
 		Node targetNode = grid.NodeFromWorldPoint(targetPos);
@@ -44,8 +32,8 @@ public class Pathfinding : MonoBehaviour
 
 			if (node == targetNode)
 			{
-				RetracePath(startNode, targetNode);
-				return;
+				return RetracePath(startNode, targetNode);
+				//return;
 			}
 
 			foreach (Node neighbour in grid.GetNeighbours(node))
@@ -67,9 +55,11 @@ public class Pathfinding : MonoBehaviour
 				}
 			}
 		}
+
+		return new List<Node>();
 	}
 
-	void RetracePath(Node startNode, Node endNode)
+	List<Node> RetracePath(Node startNode, Node endNode)
 	{
 		List<Node> path = new List<Node>();
 		Node currentNode = endNode;
@@ -81,8 +71,8 @@ public class Pathfinding : MonoBehaviour
 		}
 		path.Reverse();
 
-		grid.path = path;
-
+		//grid.path = path;
+		return path;
 	}
 
 	int GetDistance(Node nodeA, Node nodeB)

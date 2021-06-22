@@ -13,6 +13,19 @@ public class MatchManager : NetworkBehaviour
     void Start()
     {
         matchInProgress = true;
+        // TEMP
+        SpawnUnit();
+        SpawnBases();
+    }
+
+    void SpawnBases()
+    {
+        
+    }
+
+    void SpawnUnit()
+    {
+
     }
 
     void Update()

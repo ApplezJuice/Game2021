@@ -12,6 +12,10 @@ public class PlayerNetworking : NetworkBehaviour
     [SyncVar] public int gold = 100;
     [SyncVar][SerializeField] public PlayerSpec playerSpec;
 
+    [SerializeField] public Transform basePos;
+    [SerializeField] public GameObject playerBasePrefab;
+    [SerializeField] public GameObject tempUnitPrefab;
+
     GameObject enemyPlayerNameUI;
 
     void Awake()
@@ -181,6 +185,7 @@ public class PlayerNetworking : NetworkBehaviour
     void TargetResetMatch()
     {
         UIHandler.instance.UpdateGoldUI(playerSpec.gold.ToString());
+        CmdTempSetup();
     }
 
     public void StartMatch()
@@ -269,5 +274,17 @@ public class PlayerNetworking : NetworkBehaviour
     void TargetUpdateGold(string gold)
     {
         UIHandler.instance.UpdateGoldUI($"{gold}");
+    }
+
+    [Command]
+    void CmdTempSetup()
+    {
+        GameObject playerBase = Instantiate(playerBasePrefab, new Vector3(-6.71f, 1.2f, -14.0f), Quaternion.identity);
+        NetworkServer.Spawn(playerBase);
+        playerBase.GetComponent<NetworkMatchChecker>().matchId = MatchId.ToGuid();
+
+        GameObject tempUnit = Instantiate(tempUnitPrefab, new Vector3(0.0f,0.0f,0.0f), Quaternion.identity);
+        NetworkServer.Spawn(tempUnit);
+        tempUnit.GetComponent<NetworkMatchChecker>().matchId = MatchId.ToGuid();
     }
 }
