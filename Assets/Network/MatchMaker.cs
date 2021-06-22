@@ -37,6 +37,9 @@ public class MatchMaker : NetworkBehaviour
     public SyncDictionary<string, MatchManager> matchManagers = new SyncDictionary<string, MatchManager>();
 
     [SerializeField] GameObject matchManagerPrefab;
+    [SerializeField] GameObject basePrefab;
+    [SerializeField] GameObject pathfindingPrefab;
+    [SerializeField] GameObject unitPrefab;
 
     private void Start()
     {
@@ -162,6 +165,14 @@ public class MatchMaker : NetworkBehaviour
         matchManager.GetComponent<NetworkMatchChecker>().matchId = matchId.ToGuid();
         MatchManager manager = matchManager.GetComponent<MatchManager>();
 
+        GameObject pathfinding = Instantiate(pathfindingPrefab);
+        NetworkServer.Spawn(pathfinding);
+        pathfinding.GetComponent<NetworkMatchChecker>().matchId = matchId.ToGuid();
+        int playerPos = 1;
+
+        Vector3 targetBase1 = new Vector3(-6.71f, 1.2f, -14.016f);
+        Vector3 targetBase2 = new Vector3(6.86f, 1.2f, 14.016f);
+
         for (int i = 0; i < matches.Count; i++)
         {
             if (matches[i].MatchId == matchId)
@@ -180,10 +191,27 @@ public class MatchMaker : NetworkBehaviour
                     manager.AddPlayer(playerNetwork);
                     // tell each player to start the match
                     playerNetwork.StartMatch();
+                    playerNetwork.playerPos = playerPos;
+                    
+                    playerPos++;
                 }
                 break;
             }
         }
+
+        GameObject playerBase = Instantiate(basePrefab, targetBase1, Quaternion.identity);
+        NetworkServer.Spawn(playerBase);
+        playerBase.GetComponent<NetworkMatchChecker>().matchId = matchId.ToGuid();
+    
+        GameObject playerBase2 = Instantiate(basePrefab, targetBase2, Quaternion.identity);
+        NetworkServer.Spawn(playerBase2);
+        playerBase2.GetComponent<NetworkMatchChecker>().matchId = matchId.ToGuid();
+
+        GameObject unitTest = Instantiate(unitPrefab, new Vector3(0.0f, 1.2f, 0.0f), Quaternion.identity);
+        NetworkServer.Spawn(unitTest);
+        unitTest.GetComponent<NetworkMatchChecker>().matchId = matchId.ToGuid();
+        Unit unitScript = unitTest.GetComponent<Unit>();
+        unitScript.Init(ref pathfinding, ref playerBase);
     }
 }
 

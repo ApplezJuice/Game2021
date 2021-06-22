@@ -10,6 +10,7 @@ public class PlayerNetworking : NetworkBehaviour
     NetworkMatchChecker networkMatchChecker;
 
     [SyncVar] public int gold = 100;
+    [SyncVar] public int playerPos = 0;
     [SyncVar][SerializeField] public PlayerSpec playerSpec;
 
     [SerializeField] public Transform basePos;
@@ -185,7 +186,7 @@ public class PlayerNetworking : NetworkBehaviour
     void TargetResetMatch()
     {
         UIHandler.instance.UpdateGoldUI(playerSpec.gold.ToString());
-        CmdTempSetup();
+        //CmdTempSetup();
     }
 
     public void StartMatch()

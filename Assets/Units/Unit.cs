@@ -18,20 +18,18 @@ public class Unit : NetworkBehaviour
     Pathfinding pathfinder;
     float nodeDiameter;
 
-    private void Awake() 
+    public void Init(ref GameObject pathGameObject, ref GameObject baseTarget)
     {
-        // TODO: Set this via code
-        pathfinder = GameObject.Find("Pathfinding").GetComponent<Pathfinding>();
-    }
-    private void Start() {
-        if (pathfinder)
-        {
-            gridObject = pathfinder.gameObject.GetComponent<Grid>();
-            grid = gridObject.grid;
-            nodeDiameter = gridObject.nodeDiameter;
-            path = pathfinder.FindPath(this.transform.position, target.transform.position);
-            path.Reverse();
-        }
+        pathfinder = pathGameObject.GetComponent<Pathfinding>();
+        target = baseTarget;
+        Debug.Log(pathfinder);
+        //this.pathfinder = pathfinder;
+        gridObject = pathfinder.gameObject.GetComponent<Grid>();
+        grid = gridObject.grid;
+        nodeDiameter = gridObject.nodeDiameter;
+        path = pathfinder.FindPath(this.transform.position, target.transform.position);
+        Debug.Log(path);
+        path.Reverse();
     }
 
     private void OnDrawGizmos()
@@ -51,27 +49,19 @@ public class Unit : NetworkBehaviour
 
     private void Update() 
     {
-        if (!pathfinder)
-        {
-            pathfinder = GameObject.Find("Pathfinding").GetComponent<Pathfinding>();
-            if (pathfinder)
-            {
-                gridObject = pathfinder.gameObject.GetComponent<Grid>();
-                grid = gridObject.grid;
-                nodeDiameter = gridObject.nodeDiameter;
-                path = pathfinder.FindPath(this.transform.position, target.transform.position);
-                path.Reverse();
-            }
-        }else{
-            float dt = Time.deltaTime;
 
+            float dt = Time.deltaTime;
+            Debug.Log(path);
+            Debug.Log(pathfinder);
+            Debug.Log(target);
             if (moveTimer >= timeToNextNode && path.Count > 0)
             {
                 //MoveUnit(this.transform.position, path[path.Count - 1]);
                 targetPos = path[path.Count - 1].worldPosition;
                 path.RemoveAt(path.Count - 1);
                 moveTimer = 0f;
-            }else
+            }
+            else
             {
                 if (this.transform.position != targetPos)
                 {
@@ -79,10 +69,6 @@ public class Unit : NetworkBehaviour
                 }
             }
             moveTimer += dt;
-        }
-
-        
-
         
     }
 

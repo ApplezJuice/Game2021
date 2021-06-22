@@ -5066,6 +5066,12 @@ MonoBehaviour:
   syncInterval: 0
   matchManagerPrefab: {fileID: 6669317586140519371, guid: 46a79a6ac08f5f64390e0728ef17b32d,
     type: 3}
+  basePrefab: {fileID: 2841631789683085752, guid: 9401b81ae932e204f9815775539d7395,
+    type: 3}
+  pathfindingPrefab: {fileID: 6159862550814326127, guid: adc845874058fb845afde1638d1af09d,
+    type: 3}
+  unitPrefab: {fileID: 1947159339440951663, guid: ac4b376455c3a6440904eefccbfd680c,
+    type: 3}
 --- !u!114 &1383306803
 MonoBehaviour:
   m_ObjectHideFlags: 0
