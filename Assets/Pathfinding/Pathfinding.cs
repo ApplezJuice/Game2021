@@ -1,12 +1,13 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 
-public class Pathfinding : MonoBehaviour
+public class Pathfinding : NetworkBehaviour
 {
-	[SerializeField] public Grid grid;
+	[SyncVar] public Grid grid;
 
-	public List<Node> FindPath(Vector3 startPos, Vector3 targetPos)
+	public SyncList<Node> FindPath(Vector3 startPos, Vector3 targetPos)
 	{
 		Node startNode = grid.NodeFromWorldPoint(startPos);
 		Node targetNode = grid.NodeFromWorldPoint(targetPos);
@@ -56,12 +57,12 @@ public class Pathfinding : MonoBehaviour
 			}
 		}
 
-		return new List<Node>();
+		return new SyncList<Node>();
 	}
 
-	List<Node> RetracePath(Node startNode, Node endNode)
+	SyncList<Node> RetracePath(Node startNode, Node endNode)
 	{
-		List<Node> path = new List<Node>();
+		SyncList<Node> path = new SyncList<Node>();
 		Node currentNode = endNode;
 
 		while (currentNode != startNode)
@@ -69,8 +70,8 @@ public class Pathfinding : MonoBehaviour
 			path.Add(currentNode);
 			currentNode = currentNode.parent;
 		}
-		path.Reverse();
-
+		//path.Reverse();
+ 
 		//grid.path = path;
 		return path;
 	}

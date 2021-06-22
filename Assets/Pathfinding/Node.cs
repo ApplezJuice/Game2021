@@ -20,6 +20,10 @@ public class Node
         gridX = _gridX;
         gridY = _gridY;
     }
+    public Node()
+    {
+        
+    }
 
     public int fCost
     {

@@ -211,7 +211,9 @@ public class MatchMaker : NetworkBehaviour
         NetworkServer.Spawn(unitTest);
         unitTest.GetComponent<NetworkMatchChecker>().matchId = matchId.ToGuid();
         Unit unitScript = unitTest.GetComponent<Unit>();
-        unitScript.Init(ref pathfinding, ref playerBase);
+        unitScript.pathfinder = pathfinding.GetComponent<Pathfinding>();
+        unitScript.target = playerBase;
+        unitScript.Init();
     }
 }
 

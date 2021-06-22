@@ -5,31 +5,31 @@ using Mirror;
 
 public class Unit : NetworkBehaviour
 {
-    public float movementSpeed = 2f;
-    public float timeToNextNode = .3f;
-    public float moveTimer = 0f;
-    public List<Node> path;
-    public GameObject target;
-    Grid gridObject;
+    [SyncVar] public float movementSpeed = 2f;
+    [SyncVar] public float timeToNextNode = .3f;
+    [SyncVar] public float moveTimer = 0f;
+    public SyncList<Node> path = new SyncList<Node>();
+    [SyncVar] public GameObject target;
+    [SyncVar] public Grid gridObject;
     Node[,] grid;
     
-    Vector3 targetPos;
+    [SyncVar] Vector3 targetPos;
 
-    Pathfinding pathfinder;
+    [SyncVar] public Pathfinding pathfinder;
     float nodeDiameter;
 
-    public void Init(ref GameObject pathGameObject, ref GameObject baseTarget)
+    public void Init()
     {
-        pathfinder = pathGameObject.GetComponent<Pathfinding>();
-        target = baseTarget;
-        Debug.Log(pathfinder);
-        //this.pathfinder = pathfinder;
+        // pathfinder = pathGameObject.GetComponent<Pathfinding>();
+        // target = baseTarget;
+        // Debug.Log(pathfinder);
+        // //this.pathfinder = pathfinder;
         gridObject = pathfinder.gameObject.GetComponent<Grid>();
         grid = gridObject.grid;
-        nodeDiameter = gridObject.nodeDiameter;
+        // nodeDiameter = gridObject.nodeDiameter;
         path = pathfinder.FindPath(this.transform.position, target.transform.position);
-        Debug.Log(path);
-        path.Reverse();
+        // Debug.Log(path);
+        //path.Reverse();
     }
 
     private void OnDrawGizmos()
@@ -51,11 +51,9 @@ public class Unit : NetworkBehaviour
     {
 
             float dt = Time.deltaTime;
-            Debug.Log(path);
-            Debug.Log(pathfinder);
-            Debug.Log(target);
             if (moveTimer >= timeToNextNode && path.Count > 0)
             {
+                Debug.Log(path[path.Count - 1].worldPosition);
                 //MoveUnit(this.transform.position, path[path.Count - 1]);
                 targetPos = path[path.Count - 1].worldPosition;
                 path.RemoveAt(path.Count - 1);
